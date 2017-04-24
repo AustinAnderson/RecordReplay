@@ -29,13 +29,16 @@ public class RecordReplay extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private final static int ButtonWidth =300;
     private final static Dimension buttonSize=new Dimension(ButtonWidth,5);
+    private Point home=null;
+    private boolean listenForHome=false;
+    private JButton homeSetButton=new JButton("Set Home");
 	private List<Point> clickPoints=new ArrayList<Point>();
 	private JTextArea recordedPointsDisplay=null;
 	private boolean recording=false;
     private JLabel runDisplay=new JLabel(NotRunningText);
     private Robot robot=null;
-    public final static String RunningText="Running";
-    public final static String NotRunningText="NotRunning";
+    public final static String RunningText="Recording";
+    public final static String NotRunningText="Not Recording";
 	public static void main(String[] args) {
     	new RecordReplay();
     }
@@ -53,6 +56,14 @@ public class RecordReplay extends JFrame{
         recordedPointsDisplay.setEditable(false);
         JPanel namePanel=new JPanel();
         namePanel.setLayout(new FlowLayout());
+        namePanel.add(new JLabel("Home Location:"));
+        initializeButton(namePanel,homeSetButton,new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				listenForHome=true;
+				homeSetButton.setText("listening...");
+			}
+        });
         JLabel displayNamePrompt=new JLabel("Name: ");
         displayNamePrompt.setSize(buttonSize);
         displayNamePrompt.setVisible(true);
@@ -70,7 +81,19 @@ public class RecordReplay extends JFrame{
         	new AWTEventListener(){
 				@Override
 				public void eventDispatched(AWTEvent event) {
-					addClick(event);
+					if(listenForHome){
+						home=MouseInfo.getPointerInfo().getLocation();
+						listenForHome=false;
+						homeSetButton.setText(RecordReplay.point2Str(home));
+
+						trySleep();
+						trySleep();
+						trySleep();
+						robot.mousePress(InputEvent.BUTTON1_MASK);
+						robot.mouseRelease(InputEvent.BUTTON1_MASK);
+					}else{
+						addClick(event);
+					}
 				}
         	},
         	AWTEvent.FOCUS_EVENT_MASK
@@ -126,16 +149,25 @@ public class RecordReplay extends JFrame{
            System.out.println(MouseInfo.getPointerInfo().getLocation());
            clickPoints.add(MouseInfo.getPointerInfo().getLocation());
            updateTextDisplay();
-           this.requestFocus();
-           this.setVisible(true);
+           if(home!=null){
+        	   	Point current=MouseInfo.getPointerInfo().getLocation();
+				trySleep(200);
+				robot.mouseMove(home.x, home.y);
+				trySleep();
+				robot.mousePress(InputEvent.BUTTON1_MASK);
+				trySleep();
+				robot.mouseRelease(InputEvent.BUTTON1_MASK);
+				trySleep();
+				robot.mouseMove(current.x, current.y);
+				trySleep();
+           }
        }
     }
     private void updateTextDisplay(){
         StringBuilder builder=new StringBuilder();
         for(int i=0;i<clickPoints.size();i++){
             builder.append(" "+String.format("%3d", i)+
-                    ":("+String.format("%4d", clickPoints.get(i).x)+","+
-                    String.format("%4d",clickPoints.get(i).y)+")");
+                    ":"+point2Str(clickPoints.get(i)));
             if((i+1)%6==0){
                 builder.append("\n");
             }
@@ -148,10 +180,21 @@ public class RecordReplay extends JFrame{
         }
         return NotRunningText;
     }
-    public void trySleep(){
+    public void trySleep(int millis){
     	try {
-			Thread.sleep(20);
+			Thread.sleep(millis);
 		} catch (InterruptedException e) {}
+    }
+    public void trySleep(){
+    	trySleep(20);
+    }
+    private static String point2Str(Point p){
+    	String toReturn="(null,null)";
+    	if(p!=null){
+    		toReturn="("+String.format("%4d",p.x)+","+
+                         String.format("%4d",p.y)+")";
+    	}
+    	return toReturn;
     }
     
 }
