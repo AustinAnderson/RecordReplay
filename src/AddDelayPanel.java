@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,7 +14,7 @@ import step.DelayStep;
 public class AddDelayPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JSpinner spinner=new JSpinner();
-	public AddDelayPanel(RecordReplay mainDisplay){
+	public AddDelayPanel(final RecordReplay mainDisplay){
 		SwingUtil.initializeButton(this, new JButton("Add Delay"), new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -21,7 +22,7 @@ public class AddDelayPanel extends JPanel {
 			}
 		});
         add(new JLabel("Duration (ms): "));
-        spinner.setPreferredSize(SwingUtil.DefaultFeildSize);
+        spinner.setPreferredSize(new Dimension(50,SwingUtil.DefaultFeildSize.height));
         spinner.setModel(new SpinnerNumberModel(20.0,0.0,2000.0,1.0));
         add(spinner);
 	}

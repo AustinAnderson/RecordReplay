@@ -25,10 +25,13 @@ public abstract class SwingUtil {
 		return robotInstance;
 	}
     public static void initializeButton(JPanel target,JButton button,ActionListener listener){
-    	button.setSize(DefaultButtonSize);
     	button.addActionListener(listener);
     	button.setVisible(true);
     	target.add(button);
+    }
+    public static void initializeButton(JPanel target,JButton button,Dimension size,ActionListener listener){
+    	button.setSize(size);
+    	initializeButton(target,button,listener);
     }
     public static String point2Str(Point p){
     	String toReturn="(null,null)";

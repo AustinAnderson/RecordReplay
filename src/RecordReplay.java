@@ -88,6 +88,13 @@ public class RecordReplay extends JFrame{
                 stepList.clear();
 			}
         });
+        SwingUtil.initializeButton(topPanel, new JButton("Remove Last"), new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stepList.remove(stepList.size()-1);
+				updateTextDisplay();
+			}
+        });
         SwingUtil.initializeButton(topPanel,new JButton("Run"),new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
