@@ -15,7 +15,7 @@ public final class SwingUtil {
     public final static Dimension DefaultButtonSize=new Dimension(DefaultButtonWidth,5);
     public final static Dimension DefaultFeildSize=new Dimension(SwingUtil.DefaultButtonWidth,20);
 	private static Robot robotInstance=null;
-	public final static int DefaultSleepTime=500;
+	public final static int DefaultSleepTime=40;
 	
 	private SwingUtil(){}//with this and final makes it only for static methods
 	public static Robot getRobot(){

@@ -32,6 +32,7 @@ public class RecordReplay extends JFrame{
     private JLabel runDisplay=new JLabel(NotRunningText);
     private Robot robot=SwingUtil.getRobot();
     private NamePanel namePanel=new NamePanel();
+    private ConditionalClickPanel clickPanel=new ConditionalClickPanel(this);
     public final static String RunningText="Recording";
     public final static String NotRunningText="Not Recording";
 	public static void main(String[] args) {
@@ -49,12 +50,8 @@ public class RecordReplay extends JFrame{
         recordedPointsDisplay=new JTextArea(2,3);
         recordedPointsDisplay.setFont(new Font("monospaced",Font.PLAIN,12));
         recordedPointsDisplay.setEditable(false);
-        add(namePanel);
         
         JPanel topPanel=new JPanel();
-        topPanel.setLayout(new GridLayout());
-        topPanel.add(runDisplay);
-        add(new ConditionalClickPanel());
         Toolkit.getDefaultToolkit().addAWTEventListener(
         	new AWTEventListener(){
 				@Override
@@ -105,9 +102,16 @@ public class RecordReplay extends JFrame{
 				}
 			}
         });
-        add(new AddDelayPanel(this));
-        this.add(topPanel);
-        this.add(recordedPointsDisplay);
+        add(namePanel);
+        topPanel.setLayout(new GridLayout());
+        topPanel.add(runDisplay);
+        JPanel clickAndDelayPanel=new JPanel();
+        clickAndDelayPanel.setLayout(new GridLayout(1,2));
+        clickAndDelayPanel.add(new AddDelayPanel(this));
+        clickAndDelayPanel.add(clickPanel);
+        add(clickAndDelayPanel);
+        add(topPanel);
+        add(recordedPointsDisplay);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
@@ -119,7 +123,7 @@ public class RecordReplay extends JFrame{
     private void addClickEvent(AWTEvent event){
        if(recording&&event.paramString().contains("FOCUS_LOST,temporary")){
            System.out.println(MouseInfo.getPointerInfo().getLocation());
-           addStep(ClickStep.create());
+           clickPanel.addClick();
            if(namePanel.homeHasBeenSet()){//try gaining focus by clicking the icon on the task bar
         	   Point home=namePanel.getHome();
         	   Point current=MouseInfo.getPointerInfo().getLocation();
