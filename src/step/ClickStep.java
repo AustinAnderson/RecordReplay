@@ -1,17 +1,21 @@
 package step;
 
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 
 import common.SwingUtil;
 
-public class ClickStep implements Step{
-	private Robot robot=SwingUtil.getRobot();
-	public ClickStep(Point where){
+public class ClickStep implements StepInterface{
+	public static ClickStep create(){
+		return new ClickStep(MouseInfo.getPointerInfo().getLocation());
+	}
+	protected Robot robot=SwingUtil.getRobot();
+	protected ClickStep(Point where){
 		target=where;
 	}
-	private Point target=null;
+	protected Point target=null;
 	@Override
 	public void action() {
         robot.mouseMove(target.x, target.y);

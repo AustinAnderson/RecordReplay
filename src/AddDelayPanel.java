@@ -10,7 +10,7 @@ import javax.swing.SpinnerNumberModel;
 
 import common.SwingUtil;
 import step.DelayStep;
-
+//test svn commit to git
 public class AddDelayPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JSpinner spinner=new JSpinner();

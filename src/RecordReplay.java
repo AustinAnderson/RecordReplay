@@ -22,11 +22,11 @@ import javax.swing.JTextArea;
 
 import common.SwingUtil;
 import step.ClickStep;
-import step.Step;
+import step.StepInterface;
 
 public class RecordReplay extends JFrame{
 	private static final long serialVersionUID = 1L;
-	private List<Step> stepList=new ArrayList<Step>();
+	private List<StepInterface> stepList=new ArrayList<StepInterface>();
 	private JTextArea recordedPointsDisplay=null;
 	private boolean recording=false;
     private JLabel runDisplay=new JLabel(NotRunningText);
@@ -54,6 +54,7 @@ public class RecordReplay extends JFrame{
         JPanel topPanel=new JPanel();
         topPanel.setLayout(new GridLayout());
         topPanel.add(runDisplay);
+        add(new ConditionalClickPanel());
         Toolkit.getDefaultToolkit().addAWTEventListener(
         	new AWTEventListener(){
 				@Override
@@ -111,26 +112,26 @@ public class RecordReplay extends JFrame{
         pack();
         setVisible(true);
     }
-    public void addStep(Step step){
+    public void addStep(StepInterface step){
         stepList.add(step);
         updateTextDisplay();
     }
     private void addClickEvent(AWTEvent event){
        if(recording&&event.paramString().contains("FOCUS_LOST,temporary")){
            System.out.println(MouseInfo.getPointerInfo().getLocation());
-           addStep(new ClickStep(MouseInfo.getPointerInfo().getLocation()));
+           addStep(ClickStep.create());
            if(namePanel.homeHasBeenSet()){//try gaining focus by clicking the icon on the task bar
         	   Point home=namePanel.getHome();
         	   Point current=MouseInfo.getPointerInfo().getLocation();
         	   SwingUtil.trySleep(200);
         	   robot.mouseMove(home.x, home.y);
-        	   SwingUtil.trySleep();
+        	   SwingUtil.trySleep(30);
         	   robot.mousePress(InputEvent.BUTTON1_MASK);
-        	   SwingUtil.trySleep();
+        	   SwingUtil.trySleep(30);
         	   robot.mouseRelease(InputEvent.BUTTON1_MASK);
-        	   SwingUtil.trySleep();
+        	   SwingUtil.trySleep(30);
         	   robot.mouseMove(current.x, current.y);
-        	   SwingUtil.trySleep();
+        	   SwingUtil.trySleep(30);
            }else{//if we can't just request focus
         	   super.requestFocus();
         	   super.setVisible(true);

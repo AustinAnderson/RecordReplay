@@ -2,7 +2,7 @@ package step;
 
 import common.SwingUtil;
 
-public class DelayStep implements Step {
+public class DelayStep implements StepInterface {
 	public DelayStep(int time){
 		delayTimeMillis=time;
 	}

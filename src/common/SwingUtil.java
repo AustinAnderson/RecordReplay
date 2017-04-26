@@ -1,5 +1,6 @@
 package common;
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Robot;
@@ -9,11 +10,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 
-public abstract class SwingUtil {
+public final class SwingUtil {
 	public final static int DefaultButtonWidth =300;
     public final static Dimension DefaultButtonSize=new Dimension(DefaultButtonWidth,5);
     public final static Dimension DefaultFeildSize=new Dimension(SwingUtil.DefaultButtonWidth,20);
 	private static Robot robotInstance=null;
+	public final static int DefaultSleepTime=500;
+	
+	private SwingUtil(){}//with this and final makes it only for static methods
 	public static Robot getRobot(){
 		if(robotInstance==null){
 			try {
@@ -42,11 +46,18 @@ public abstract class SwingUtil {
     	return toReturn;
     }
     public static void trySleep(){
-    	trySleep(20);
+    	trySleep(DefaultSleepTime);
     }
     public static void trySleep(int millis){
     	try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {}
+    }
+    public static String color2Str(Color c){
+    	return ("#"+
+    	Integer.toHexString(c.getRed())+
+    	Integer.toHexString(c.getGreen())+
+    	Integer.toHexString(c.getBlue())).toUpperCase();
+    	
     }
 }

@@ -1,5 +1,5 @@
 package step;
 
-public interface Step {
+public interface StepInterface {
 	public void action();
 }
