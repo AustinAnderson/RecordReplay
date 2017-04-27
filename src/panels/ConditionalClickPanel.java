@@ -1,4 +1,6 @@
+package panels;
 import java.awt.AWTEvent;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import common.SwingUtil;
+import frame.RecordReplay;
 import step.ClickStep;
 import step.ConditionalClickStep;
 
@@ -76,12 +79,15 @@ public class ConditionalClickPanel extends JPanel {
         		updateCurrentColor();
         	}
         },0,5);
-        setLayout(new GridLayout(1,4));
+        //setLayout(new GridLayout(1,4));
         JLabel typeOfClickLabel=new JLabel("Type Of Click:    ");
         typeOfClickLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         add(typeOfClickLabel);
         add(typeOfClick);
-        add(currentColor);
+        JPanel currentColorDisplay=new JPanel();
+        currentColorDisplay.add(currentColor);
+        currentColorDisplay.add(new CurrentColorDisplayPanel());
+        add(currentColorDisplay);
 	}
 	public void addClick(){
 		if(conditionalClick){

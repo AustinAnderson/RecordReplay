@@ -1,3 +1,4 @@
+package panels;
 import java.awt.FlowLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;

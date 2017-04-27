@@ -1,3 +1,4 @@
+package frame;
 import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Color;
@@ -21,6 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import common.SwingUtil;
+import panels.AddDelayPanel;
+import panels.ConditionalClickPanel;
+import panels.NamePanel;
 import step.ClickStep;
 import step.StepInterface;
 

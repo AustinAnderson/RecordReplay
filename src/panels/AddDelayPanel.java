@@ -1,4 +1,6 @@
+package panels;
 import java.awt.Dimension;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,6 +11,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import common.SwingUtil;
+import frame.RecordReplay;
 import step.DelayStep;
 //test svn commit to git
 public class AddDelayPanel extends JPanel {
