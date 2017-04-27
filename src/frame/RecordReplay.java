@@ -24,6 +24,7 @@ import javax.swing.JTextArea;
 import common.SwingUtil;
 import panels.AddDelayPanel;
 import panels.ConditionalClickPanel;
+import panels.CurrentColorDisplayPanel;
 import panels.NamePanel;
 import step.ClickStep;
 import step.StepInterface;
@@ -106,6 +107,7 @@ public class RecordReplay extends JFrame{
 				}
 			}
         });
+        add(new CurrentColorDisplayPanel());
         add(namePanel);
         topPanel.setLayout(new GridLayout());
         topPanel.add(runDisplay);
