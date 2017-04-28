@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 
 
 public final class SwingUtil {
-	public final static int DefaultButtonWidth =300;
-    public final static Dimension DefaultButtonSize=new Dimension(DefaultButtonWidth,5);
-    public final static Dimension DefaultFeildSize=new Dimension(SwingUtil.DefaultButtonWidth,20);
+	public final static int DefaultButtonWidth =125;
+    public final static Dimension DefaultButtonSize=new Dimension(DefaultButtonWidth,25);
+    public final static Dimension DefaultFeildSize=new Dimension(300,20);
 	private static Robot robotInstance=null;
 	public final static int DefaultSleepTime=40;
 	
@@ -28,13 +28,16 @@ public final class SwingUtil {
 		}
 		return robotInstance;
 	}
+	public static Dimension widthModifiedDefaultButtonSize(int delta){
+		return new Dimension(DefaultButtonWidth+delta,DefaultButtonSize.height);
+	}
     public static void initializeButton(JPanel target,JButton button,ActionListener listener){
     	button.addActionListener(listener);
     	button.setVisible(true);
     	target.add(button);
     }
     public static void initializeButton(JPanel target,JButton button,Dimension size,ActionListener listener){
-    	button.setSize(size);
+    	button.setPreferredSize(size);
     	initializeButton(target,button,listener);
     }
     public static String point2Str(Point p){

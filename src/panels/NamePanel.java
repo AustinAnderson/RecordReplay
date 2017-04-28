@@ -1,4 +1,5 @@
 package panels;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -23,7 +24,7 @@ public class NamePanel extends JPanel {
 	public NamePanel(){
         setLayout(new FlowLayout());
         add(new JLabel("Home Location:"));
-        SwingUtil.initializeButton(this,homeSetButton,new ActionListener(){
+        SwingUtil.initializeButton(this,homeSetButton,SwingUtil.widthModifiedDefaultButtonSize(-20),new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 listenForHome=true;
@@ -34,7 +35,8 @@ public class NamePanel extends JPanel {
         add(displayNamePrompt);
         JTextField nameFeild=new JTextField();
         nameFeild.setToolTipText("name for this action");
-        nameFeild.setPreferredSize(SwingUtil.DefaultFeildSize);
+        nameFeild.setPreferredSize(
+        	new Dimension(SwingUtil.DefaultFeildSize.width-20,SwingUtil.DefaultFeildSize.height));
         add(nameFeild);
 	}
 	public boolean isListening(){

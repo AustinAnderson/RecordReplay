@@ -2,6 +2,8 @@ package frame;
 import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -45,7 +47,12 @@ public class RecordReplay extends JFrame{
     public final static String RunningText="Recording";
     public final static String NotRunningText="Not Recording";
 	public static void main(String[] args) {
-    	new RecordReplay();
+    	EventQueue.invokeLater(new Runnable(){
+    		@Override
+    		public void run(){
+    			new RecordReplay();
+    		}
+    	});
     }
     public String getRunStopButtonText(){
     	String toReturn="Start Recording";
@@ -76,7 +83,7 @@ public class RecordReplay extends JFrame{
         	},
         	AWTEvent.FOCUS_EVENT_MASK
         );
-        SwingUtil.initializeButton(actionButtonsPanel,runStopButton,new ActionListener() {
+        SwingUtil.initializeButton(actionButtonsPanel,runStopButton,SwingUtil.DefaultButtonSize,new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				recording=!recording;
@@ -84,21 +91,21 @@ public class RecordReplay extends JFrame{
 				runStopButton.setText(getRunStopButtonText());
 			}
 		});
-        SwingUtil.initializeButton(actionButtonsPanel,new JButton("Clear Recording"),new ActionListener(){
+        SwingUtil.initializeButton(actionButtonsPanel,new JButton("Clear Recording"),SwingUtil.DefaultButtonSize,new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 recordedPointsDisplay.setText("");
                 stepList.clear();
 			}
         });
-        SwingUtil.initializeButton(actionButtonsPanel, new JButton("Remove Last"), new ActionListener(){
+        SwingUtil.initializeButton(actionButtonsPanel, new JButton("Remove Last"),SwingUtil.DefaultButtonSize, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				stepList.remove(stepList.size()-1);
 				updateTextDisplay();
 			}
         });
-        SwingUtil.initializeButton(actionButtonsPanel,new JButton("Run"),new ActionListener(){
+        SwingUtil.initializeButton(actionButtonsPanel,new JButton("Run"),SwingUtil.DefaultButtonSize,new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				recording=false;
@@ -107,23 +114,26 @@ public class RecordReplay extends JFrame{
 				}
 			}
         });
-    	this.setLayout(new GridBagLayout());
+        this.setLayout(new GridLayout(2,1));
+        JPanel top=new JPanel();
+    	top.setLayout(new GridBagLayout());
     	GridBagConstraints c=new GridBagConstraints();
     	c.gridx=0;
     	c.gridy=0;
-        add(namePanel,c);
+        top.add(namePanel,c);
         	JPanel clickAndDelayPanel=new JPanel();
         	clickAndDelayPanel.setLayout(new GridLayout(1,2));
         	clickAndDelayPanel.add(new AddDelayPanel(this));
         	clickAndDelayPanel.add(clickPanel);
     	c.gridx=0;
     	c.gridy=1;
-        add(clickAndDelayPanel,c);
+        top.add(clickAndDelayPanel,c);
         
     	c.gridx=1;
     	c.gridy=0;
     	c.gridheight=2;
-    	add(new CurrentColorDisplayPanel(),c);
+    	CurrentColorDisplayPanel colorDisplay=new CurrentColorDisplayPanel();
+    	top.add(colorDisplay,c);
     	c.gridheight=1;
     	
         	actionButtonsPanel.setLayout(new GridLayout());
@@ -131,11 +141,9 @@ public class RecordReplay extends JFrame{
     	c.gridx=0;
     	c.gridy=2;
     	c.gridwidth=2;
-        add(actionButtonsPanel,c);
-    	c.gridx=0;
-    	c.gridy=3;
-    	c.gridwidth=2;
-        add(recordedPointsDisplay,c);
+        top.add(actionButtonsPanel,c);
+        add(top);
+        add(recordedPointsDisplay);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
@@ -161,6 +169,7 @@ public class RecordReplay extends JFrame{
         	   robot.mouseMove(current.x, current.y);
         	   SwingUtil.trySleep(30);
            }else{//if we can't just request focus
+        	   super.toFront();
         	   super.requestFocus();
         	   super.setVisible(true);
            }
