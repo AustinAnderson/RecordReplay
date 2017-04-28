@@ -14,9 +14,11 @@ import java.awt.event.FocusEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import common.SwingUtil;
 import frame.RecordReplay;
@@ -28,14 +30,11 @@ public class ConditionalClickPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel typeOfClick=new JLabel("_");
-	private JLabel currentColor=null;
-	private Robot robot=SwingUtil.getRobot();
 	private boolean conditionalClick=false;
 	private boolean clickOnNotColor=false;
-	private Timer updateMouseColor=new Timer();
 	public static final String ClickOnColorText="Click On Color";
 	public static final String ClickOnNotColorText="Click On Not Color";
-	public static final String NeitherText="Click";
+	public static final String NeitherText="Normal Click";
 	public static final int ClickOnColorKeyCode=KeyEvent.VK_F;
 	public static final int ClickOnNotColorKeyCode=KeyEvent.VK_D;
 	private RecordReplay mainProg=null;
@@ -73,21 +72,11 @@ public class ConditionalClickPanel extends JPanel {
         	},
         	AWTEvent.KEY_EVENT_MASK|AWTEvent.FOCUS_EVENT_MASK
         );
-        currentColor=new JLabel();
-        updateMouseColor.schedule(new TimerTask(){
-        	public void run(){
-        		updateCurrentColor();
-        	}
-        },0,5);
-        //setLayout(new GridLayout(1,4));
+        setLayout(new GridLayout(1,4));
         JLabel typeOfClickLabel=new JLabel("Type Of Click:    ");
         typeOfClickLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         add(typeOfClickLabel);
         add(typeOfClick);
-        JPanel currentColorDisplay=new JPanel();
-        currentColorDisplay.add(currentColor);
-        currentColorDisplay.add(new CurrentColorDisplayPanel());
-        add(currentColorDisplay);
 	}
 	public void addClick(){
 		if(conditionalClick){
@@ -95,20 +84,6 @@ public class ConditionalClickPanel extends JPanel {
 		}else{
 			mainProg.addStep(ClickStep.create());
 		}
-	}
-	private void updateCurrentColor(){
-		Point p=MouseInfo.getPointerInfo().getLocation();
-		currentColor.setText(SwingUtil.color2Str(robot.getPixelColor(p.x, p.y)));
-	}
-	private void setClickOnNotColor(AWTEvent event){
-		KeyEvent keyEvent=null;
-		try{ keyEvent=(KeyEvent)event;
-            if(keyEvent.getKeyCode()==ClickOnColorKeyCode){
-                clickOnNotColor=false;
-            }else if(keyEvent.getKeyCode()==ClickOnNotColorKeyCode){
-                clickOnNotColor=true;
-            }
-		}catch(ClassCastException ex){}
 	}
 	private void updateDisplayLabel(){
 		typeOfClick.setText(NeitherText);

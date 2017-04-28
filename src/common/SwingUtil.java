@@ -55,9 +55,10 @@ public final class SwingUtil {
     }
     public static String color2Str(Color c){
     	return ("#"+
-    	Integer.toHexString(c.getRed())+
-    	Integer.toHexString(c.getGreen())+
-    	Integer.toHexString(c.getBlue())).toUpperCase();
+    		String.format("%02X",c.getRed())+
+    		String.format("%02X",c.getGreen())+
+    		String.format("%02X",c.getBlue())
+    	).toUpperCase();
     	
     }
 }

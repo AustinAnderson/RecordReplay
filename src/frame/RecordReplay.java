@@ -3,6 +3,8 @@ import java.awt.AWTEvent;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -20,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 import common.SwingUtil;
 import panels.AddDelayPanel;
@@ -35,6 +38,7 @@ public class RecordReplay extends JFrame{
 	private JTextArea recordedPointsDisplay=null;
 	private boolean recording=false;
     private JLabel runDisplay=new JLabel(NotRunningText);
+    private JButton runStopButton=new JButton(getRunStopButtonText());
     private Robot robot=SwingUtil.getRobot();
     private NamePanel namePanel=new NamePanel();
     private ConditionalClickPanel clickPanel=new ConditionalClickPanel(this);
@@ -43,20 +47,22 @@ public class RecordReplay extends JFrame{
 	public static void main(String[] args) {
     	new RecordReplay();
     }
+    public String getRunStopButtonText(){
+    	String toReturn="Start Recording";
+    	if(recording){
+    		toReturn="Stop Recording";
+    	}
+    	return toReturn;
+    }
     public RecordReplay(){
-    	try {
-			robot=new Robot();
-		} catch (AWTException e1) {
-			e1.printStackTrace();
-		}
-    	this.setLayout(new GridLayout(4,1));
         runDisplay.setVisible(true);
-        runDisplay.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
+        runDisplay.setBorder(BorderFactory.createLineBorder(new Color(122,138,153), 1));
+        runDisplay.setHorizontalAlignment(SwingConstants.CENTER);
         recordedPointsDisplay=new JTextArea(2,3);
         recordedPointsDisplay.setFont(new Font("monospaced",Font.PLAIN,12));
         recordedPointsDisplay.setEditable(false);
         
-        JPanel topPanel=new JPanel();
+        JPanel actionButtonsPanel=new JPanel();
         Toolkit.getDefaultToolkit().addAWTEventListener(
         	new AWTEventListener(){
 				@Override
@@ -70,35 +76,29 @@ public class RecordReplay extends JFrame{
         	},
         	AWTEvent.FOCUS_EVENT_MASK
         );
-        SwingUtil.initializeButton(topPanel,new JButton("Start Recording"),new ActionListener() {
+        SwingUtil.initializeButton(actionButtonsPanel,runStopButton,new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recording=true;
+				recording=!recording;
 				runDisplay.setText(getDisplayText());
+				runStopButton.setText(getRunStopButtonText());
 			}
 		});
-        SwingUtil.initializeButton(topPanel,new JButton("Stop Recording"),new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				recording=false;
-				runDisplay.setText(getDisplayText());
-			}
-		});
-        SwingUtil.initializeButton(topPanel,new JButton("Clear Recording"),new ActionListener(){
+        SwingUtil.initializeButton(actionButtonsPanel,new JButton("Clear Recording"),new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 recordedPointsDisplay.setText("");
                 stepList.clear();
 			}
         });
-        SwingUtil.initializeButton(topPanel, new JButton("Remove Last"), new ActionListener(){
+        SwingUtil.initializeButton(actionButtonsPanel, new JButton("Remove Last"), new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				stepList.remove(stepList.size()-1);
 				updateTextDisplay();
 			}
         });
-        SwingUtil.initializeButton(topPanel,new JButton("Run"),new ActionListener(){
+        SwingUtil.initializeButton(actionButtonsPanel,new JButton("Run"),new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				recording=false;
@@ -107,17 +107,35 @@ public class RecordReplay extends JFrame{
 				}
 			}
         });
-        add(new CurrentColorDisplayPanel());
-        add(namePanel);
-        topPanel.setLayout(new GridLayout());
-        topPanel.add(runDisplay);
-        JPanel clickAndDelayPanel=new JPanel();
-        clickAndDelayPanel.setLayout(new GridLayout(1,2));
-        clickAndDelayPanel.add(new AddDelayPanel(this));
-        clickAndDelayPanel.add(clickPanel);
-        add(clickAndDelayPanel);
-        add(topPanel);
-        add(recordedPointsDisplay);
+    	this.setLayout(new GridBagLayout());
+    	GridBagConstraints c=new GridBagConstraints();
+    	c.gridx=0;
+    	c.gridy=0;
+        add(namePanel,c);
+        	JPanel clickAndDelayPanel=new JPanel();
+        	clickAndDelayPanel.setLayout(new GridLayout(1,2));
+        	clickAndDelayPanel.add(new AddDelayPanel(this));
+        	clickAndDelayPanel.add(clickPanel);
+    	c.gridx=0;
+    	c.gridy=1;
+        add(clickAndDelayPanel,c);
+        
+    	c.gridx=1;
+    	c.gridy=0;
+    	c.gridheight=2;
+    	add(new CurrentColorDisplayPanel(),c);
+    	c.gridheight=1;
+    	
+        	actionButtonsPanel.setLayout(new GridLayout());
+        	actionButtonsPanel.add(runDisplay);
+    	c.gridx=0;
+    	c.gridy=2;
+    	c.gridwidth=2;
+        add(actionButtonsPanel,c);
+    	c.gridx=0;
+    	c.gridy=3;
+    	c.gridwidth=2;
+        add(recordedPointsDisplay,c);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);

@@ -26,7 +26,7 @@ import common.SwingUtil;
 
 public class CurrentColorDisplayPanel extends JPanel{
 	private final static int SAMPLE_PIXELS_FROM_CENTER=5;//how many pixels in each direction to sample in addition to the current position's
-	private final static int BigPixelScale=5;//the side length of the square for each sampled pixel
+	private final static int BigPixelScale=8;//the side length of the square for each sampled pixel
 	private final static int SAMPLE_PIXELS_COUNT=(2*SAMPLE_PIXELS_FROM_CENTER)+1;
 	private final static int TopMargin=BigPixelScale*2;
 	private String currentColor=null;
@@ -76,11 +76,16 @@ public class CurrentColorDisplayPanel extends JPanel{
 			}
 		}, 0,50);
 		int sideLength=((SAMPLE_PIXELS_FROM_CENTER*2)+1)*BigPixelScale;
-		this.setMinimumSize(new Dimension(sideLength,sideLength+TopMargin));
+		Dimension targetSize=new Dimension(sideLength,sideLength+TopMargin);
+		this.setMinimumSize(targetSize);
+		this.setPreferredSize(targetSize);
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		
 	}
 	public String getCurrentColor(){
 		return currentColor;
 	}
+	/*
 	public static void main(String[] args){
 		JFrame testFrame=new JFrame();
 		CurrentColorDisplayPanel drawPanel=new CurrentColorDisplayPanel();
@@ -91,4 +96,5 @@ public class CurrentColorDisplayPanel extends JPanel{
 		testFrame.pack();
 		testFrame.setVisible(true);
 	}
+	*/
 }

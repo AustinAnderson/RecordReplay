@@ -26,7 +26,7 @@ public class ConditionalClickStep extends ClickStep {
 	}
 	@Override
 	public void action() {
-		boolean click=(robot.getPixelColor(target.x, target.y)==color);
+		boolean click=(robot.getPixelColor(target.x, target.y).equals(color));
 		if(clickOnNotColor) click=!click;
 		
 		if(click){
@@ -37,8 +37,7 @@ public class ConditionalClickStep extends ClickStep {
 	public String toString(){
 		String notIndicator="";
 		if(clickOnNotColor) notIndicator="!";
-		return "if("+notIndicator+SwingUtil.color2Str(color)+")" +
-			   "click("+SwingUtil.point2Str(target)+")";
+		return "if("+notIndicator+SwingUtil.color2Str(color)+")" +super.toString();
 	}
 
 }
